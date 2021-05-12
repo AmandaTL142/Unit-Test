@@ -42,7 +42,6 @@ class PasswordCheckTest {
         boolean pwLongTestTrue1 = validator.isValidPassword("193npa","0101211039");
 
 
-
         //Skal være mellem 6 og 40 tegn
         boolean pwLongTestFalse1 = validator.isValidPassword("193eo","0101211039"); //5 tegn
 
