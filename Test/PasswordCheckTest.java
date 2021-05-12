@@ -70,8 +70,12 @@ class PasswordCheckTest {
         boolean pwLongTestFalse9 = validator.isValidPassword("0101211039aed ","0101211039"); //Indeholder CPR-nummer
 
 
+        //Der skelnes ikke mellem store og små bogstaver
+        boolean pwLongTestTrue2 = validator.isValidPassword("193NPA","0101211039"); //Tester, om store bogstaver også godkendes
+
+
         //Tilladte specialtegn er: { } ! # " $ ’ % ^ & , * ( ) _ + - = : ; ? . og @
-        boolean pwLongTestTrue2 = validator.isValidPassword("an19{}!#\"$’%^&,*()_+-=:;?.@","0101211039"); //Indeholder alle de listede specialtegn
+        boolean pwLongTestTrue3 = validator.isValidPassword("an19{}!#\"$’%^&,*()_+-=:;?.@","0101211039"); //Indeholder alle de listede specialtegn
 
 
         // Assert
@@ -96,5 +100,6 @@ class PasswordCheckTest {
         assertEquals(false,pwLongTestFalse9);
         assertEquals(true,pwLongTestTrue1);
         assertEquals(true,pwLongTestTrue2);
+        assertEquals(true,pwLongTestTrue3);
     }
 }
