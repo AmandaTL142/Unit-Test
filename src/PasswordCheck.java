@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -34,7 +33,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
         if (    password.length() == 4 &&                       //Skal bestå af 4 tegn
                 isNumeric(password) &&                          //Skal udelukkende bestå af tal
                 isNotSequence(password) &&                      //Må ikke bestå af en talrække fx 1234 eller 5678
-                sameFourCharacters(password) &&                 //Må ikke bestå af 4 ens tal
+                testIfSameFourCharactersInARow(password) &&                 //Må ikke bestå af 4 ens tal
                 !cpr.contains(password)                         //Må ikke være en del af dit cpr-nummer
         ) {
             return true;
@@ -50,7 +49,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
                         password.length() <= 40 &&              //Højst 40 tegn
                         password.startsWith(" ") &&             //Må ikke starte med et blanktegn
                         password.endsWith(" ") &&               //Må ikke slutte med et blanktegn
-                        sameFourCharacters(password) &&         //Må ikke indeholde det samme tegn 4 gange i træk
+                        testIfSameFourCharactersInARow(password) &&         //Må ikke indeholde det samme tegn 4 gange i træk
                         !cpr.contains(password) &&              //En kode kortere end CPR må ikke være identisk med en del af CPR-nummeret
                         !password.contains(cpr) &&              //En kode længere end eller lig med CPR må ikke indeholde CPR
 
@@ -84,12 +83,12 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
         return Pattern.compile("[0-9]").matcher(s).find();
     }
 
-    //Jeg er skeprisk over, hvorvidt denne metode virker
+    //Jeg forstår ikke denne metode
     public static boolean stringContainsLetter(String s) {
         return Pattern.compile("[a-z]").matcher(s.toLowerCase(Locale.ROOT)).find();
     }
 
-    public static boolean sameFourCharacters(String password) {
+    public static boolean testIfSameFourCharactersInARow(String password) {
         char currentChar;
         int frequency;
         boolean isTrue = false;
