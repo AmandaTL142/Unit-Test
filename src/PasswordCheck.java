@@ -44,7 +44,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
         } else if (
                         stringContainsNumbersAndLetters(password) &&    //Tjekker at der er både tal og bogstaver
                         containsOnlyValidCharacters(password) &&        //Tjekker om alle karakterer er lovlige
-                        !password.contains("æ") &&                      //Indeholder ikkeæ, ø eller å
+                        !password.contains("æ") &&                      //Indeholder ikke æ, ø eller å
                         !password.contains("ø") &&
                         !password.contains("å") &&
                         password.length() >= 6 &&                       //Mindst 6 tegn
