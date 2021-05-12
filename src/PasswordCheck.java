@@ -1,7 +1,6 @@
-import java.util.Locale;
-import java.util.regex.Pattern;
-
 public class PasswordCheck {
+
+    //Løst uden Regex, den må jeg tage næste gang :)
 
     /*
 Din adgangskode med minimum seks tegn
@@ -16,7 +15,7 @@ Hvis du vælger en adgangskode med minimum 6 tegn, blandede tal og bogstaver og 
 ✔ Må hverken starte eller slutte med et blanktegn
 ✔ Må ikke indeholde dit cpr- eller NemID-nummer
 ✔ Der skelnes ikke mellem store og små bogstaver.
-Tilladte specialtegn er: { } ! # " $ ’ % ^ & , * ( ) _ + - = : ; ? . og @.
+✔ Tilladte specialtegn er: { } ! # " $ ’ % ^ & , * ( ) _ + - = : ; ? . og @.
 
 Din adgangskode med fire tal
 Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
@@ -29,29 +28,28 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
 
     static boolean isValidPassword(String password, String cpr) {
         password = password.toLowerCase();                      //Der skelnes ikke mellem store og små bogstaver
+
         //Password på 4 tal
         if (    password.length() == 4 &&                       //Skal bestå af 4 tegn
                 isNumeric(password) &&                          //Skal udelukkende bestå af tal
                 isNotSequence(password) &&                      //Må ikke bestå af en talrække fx 1234 eller 5678
-                testIfSameFourCharactersInARow(password) &&                 //Må ikke bestå af 4 ens tal
+                notSameFourCharactersInARow(password) &&     //Må ikke bestå af 4 ens tal
                 !cpr.contains(password)                         //Må ikke være en del af dit cpr-nummer
         ) {
             return true;
 
-            //Password på mindst 6 tegn
+
+        //Password på mindst 6 tegn
         } else if (
-                        stringContainsNumber(password) &&       //Skal indeholde tal
-                        stringContainsLetter(password) &&       //Skal indeholde bogstaver
-                        !password.contains("æ") &&              //Må ikke indeholde æ
-                        !password.contains("ø") &&              //Må ikke indeholde ø
-                        !password.contains("å") &&              //Må ikke indeholde å
-                        password.length() >= 6 &&               //Mindst 6 tegn
-                        password.length() <= 40 &&              //Højst 40 tegn
-                        password.startsWith(" ") &&             //Må ikke starte med et blanktegn
-                        password.endsWith(" ") &&               //Må ikke slutte med et blanktegn
-                        testIfSameFourCharactersInARow(password) &&         //Må ikke indeholde det samme tegn 4 gange i træk
-                        !cpr.contains(password) &&              //En kode kortere end CPR må ikke være identisk med en del af CPR-nummeret
-                        !password.contains(cpr) &&              //En kode længere end eller lig med CPR må ikke indeholde CPR
+                        stringContainsNumbersAndLetters(password) &&    //Tjekker at der er både tal og bogstaver
+                        containsOnlyValidCharacters(password) &&        //Tjekker om alle karakterer er lovlige
+                        password.length() >= 6 &&                       //Mindst 6 tegn
+                        password.length() <= 40 &&                      //Højst 40 tegn
+                        !password.startsWith(" ") &&                    //Må ikke starte med et blanktegn
+                        !password.endsWith(" ") &&                      //Må ikke slutte med et blanktegn
+                        notSameFourCharactersInARow(password) &&     //Må ikke indeholde det samme tegn 4 gange i træk
+                        !cpr.contains(password) &&                      //En kode kortere end CPR må ikke være identisk med en del af CPR-nummeret
+                        !password.contains(cpr)                         //En kode længere end eller lig med CPR må ikke indeholde CPR
 
         ) {
             return true;
@@ -61,7 +59,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
 
     }
 
-    //Denne metode bruges til at undersøge, om et string-input er et tal.
+    //Denne metode bruges til at undersøge, om et string-input kun indeholder tal.
     public static boolean isNumeric(String str) {
         try {
             Integer.parseInt(str);
@@ -79,19 +77,32 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
         }
     }
 
-    public static boolean stringContainsNumber(String s) {
-        return Pattern.compile("[0-9]").matcher(s).find();
+    public static boolean stringContainsNumbersAndLetters(String password) {
+        int checkerLetter = 0;
+        int checkerNumber = 0;
+        char[] chars = password.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            if (Character.isLetter(chars[i])) {
+                checkerLetter++;
+
+            } else if (Character.isDigit(chars[i])) {
+                checkerNumber++;
+            }
+        }
+
+        if(checkerLetter!=0 && checkerNumber!=0){
+            return true;
+        } else {
+                return false;
+        }
     }
 
-    //Jeg forstår ikke denne metode
-    public static boolean stringContainsLetter(String s) {
-        return Pattern.compile("[a-z]").matcher(s.toLowerCase(Locale.ROOT)).find();
-    }
 
-    public static boolean testIfSameFourCharactersInARow(String password) {
+
+    public static boolean notSameFourCharactersInARow(String password) {
         char currentChar;
         int frequency;
-        boolean isTrue = false;
+        boolean sameFourChar = false;
         char[] chars = password.toCharArray();
         for (int i = 0; i < (chars.length - 1); i++) {
             currentChar = chars[i];
@@ -99,19 +110,71 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
             for (int j = i + 1; j < chars.length; j++) {
                 if (chars[j] == currentChar) {
                     frequency++;
+
+                    if(j==(chars.length - 1) && frequency >= 4){
+                        sameFourChar = true;
+                    }
                 } else if (chars[j] != currentChar && frequency >= 4) {
-                    isTrue = true;
+                    sameFourChar = true;
+                    break;
                 } else {
                     break;
                 }
             }
         }
-        if (isTrue == true) {
+        if (sameFourChar == true) {
+            return false;
+        } else {
+            return true;
+        }
+
+
+    }
+
+    public static boolean containsOnlyValidCharacters(String password) {
+        int checker = 0;
+        char[] chars = password.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            if (    Character.isLetter(chars[i]) ||
+                    Character.isDigit(chars[i]) ||
+                    chars[i] == '{' ||
+                    chars[i] == '}' ||
+                    chars[i] == '!' ||
+                    chars[i] == '#' ||
+                    chars[i] == '"' ||
+                    chars[i] == '$' ||
+                    chars[i] == '’' ||
+                    chars[i] == '%' ||
+                    chars[i] == '^' ||
+                    chars[i] == '&' ||
+                    chars[i] == ',' ||
+                    chars[i] == '*' ||
+                    chars[i] == '(' ||
+                    chars[i] == ')' ||
+                    chars[i] == '_' ||
+                    chars[i] == '+' ||
+                    chars[i] == '-' ||
+                    chars[i] == '=' ||
+                    chars[i] == ':' ||
+                    chars[i] == ';' ||
+                    chars[i] == '?' ||
+                    chars[i] == '.' ||
+                    chars[i] == ' ' ||
+                    chars[i] == '@' &&
+                    chars[i] != 'æ' &&
+                    chars[i] != 'ø' &&
+                    chars[i] != 'å') {
+            } else {
+                checker++;
+            }
+        }
+
+        if(checker==0){
             return true;
         } else {
             return false;
         }
 
-
     }
 }
+
