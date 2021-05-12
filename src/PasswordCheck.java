@@ -26,6 +26,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
 ✔ Må ikke være en del af dit cpr-nummer.
      */
 
+    //Metoden returnerer "true", hvis passwordet godkendes
     static boolean isValidPassword(String password, String cpr) {
         password = password.toLowerCase();                      //Der skelnes ikke mellem store og små bogstaver
 
@@ -33,7 +34,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
         if (    password.length() == 4 &&                       //Skal bestå af 4 tegn
                 isNumeric(password) &&                          //Skal udelukkende bestå af tal
                 isNotSequence(password) &&                      //Må ikke bestå af en talrække fx 1234 eller 5678
-                notSameFourCharactersInARow(password) &&     //Må ikke bestå af 4 ens tal
+                notSameFourCharactersInARow(password) &&        //Må ikke bestå af 4 ens tal
                 !cpr.contains(password)                         //Må ikke være en del af dit cpr-nummer
         ) {
             return true;
@@ -47,7 +48,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
                         password.length() <= 40 &&                      //Højst 40 tegn
                         !password.startsWith(" ") &&                    //Må ikke starte med et blanktegn
                         !password.endsWith(" ") &&                      //Må ikke slutte med et blanktegn
-                        notSameFourCharactersInARow(password) &&     //Må ikke indeholde det samme tegn 4 gange i træk
+                        notSameFourCharactersInARow(password) &&        //Må ikke indeholde det samme tegn 4 gange i træk
                         !cpr.contains(password) &&                      //En kode kortere end CPR må ikke være identisk med en del af CPR-nummeret
                         !password.contains(cpr)                         //En kode længere end eller lig med CPR må ikke indeholde CPR
 
@@ -106,7 +107,7 @@ Hvis du vælger en adgangskode med 4 tal skal opfylde følgende krav:
         char[] chars = password.toCharArray();
         for (int i = 0; i < (chars.length - 1); i++) {
             currentChar = chars[i];
-            frequency = 0;
+            frequency = 1;
             for (int j = i + 1; j < chars.length; j++) {
                 if (chars[j] == currentChar) {
                     frequency++;
