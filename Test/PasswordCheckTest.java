@@ -71,7 +71,7 @@ class PasswordCheckTest {
 
 
         //Der skelnes ikke mellem store og små bogstaver
-        boolean pwLongTestTrue2 = validator.isValidPassword("193NPA","0101211039"); //Tester, om store bogstaver også godkendes
+        boolean pwLongTestTrue2 = validator.isValidPassword("193NPA","0101211039"); //Tester, om store bogstaver også godkendes. Jeg kan dog ikke rent faktisk teste, om programmet ikke vil skelne.
 
 
         //Tilladte specialtegn er: { } ! # " $ ’ % ^ & , * ( ) _ + - = : ; ? . og @
